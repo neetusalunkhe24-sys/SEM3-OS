@@ -1,0 +1,48 @@
+print("Name: Neetu Salunkhe")
+print("Roll no.: S109")
+
+from multiprocessing import Process, Queue
+import time
+import random
+
+#Create the Producer function
+def producer(queue):
+    """
+    The producer generates data and puts it into the queue.
+    queue.put(item) is a message-passing method to send data to the consumer.
+    """
+
+    for i in range(5):
+        item = random.randint(1, 100) #Create a random item
+        print(f"Producer produced: {item}")
+        queue.put(item) #Send (enqueue) item to consumer
+        time.sleep(random.random()) #Simulate delay
+
+#Create the Consumer function
+def consumer(queue):
+    """
+    The consumer takes data from the queue and processes it.
+    queue.get() blocks until it gets an item.
+    """
+
+    for i in range(5):
+        item = queue.get() #Receive item from producer
+        print(f"Consumer consumed: {item}")
+        time.sleep(random.random()) #Simulate processing
+
+#Create queue and start processes
+if __name__ == "__main__":
+    q = Queue() 
+
+#Create separate processes for producer and consumer
+    p1 = Process(target=producer, args=(q,))
+    p2 = Process(target=consumer, args=(q,))
+
+#Start both processes
+    p1.start()
+    p2.start()
+
+#Wait for both to finish using join()
+    p1.join()
+    p2.join()
+    print("Producer and Consumer have finished.")
