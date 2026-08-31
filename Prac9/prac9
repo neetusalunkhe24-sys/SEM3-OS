@@ -1,0 +1,102 @@
+#9.
+
+# Memory Management - FIFO and LRU Page Replacement
+# Runs directly in Python IDLE
+print("S109 Neetu Salunkhe")
+
+def fifo(reference_string, frames):
+    memory = []
+    hits = 0
+    misses = 0
+
+    for page in reference_string:
+        if page in memory:
+            hits += 1
+        else:
+            misses += 1
+
+            if len(memory) < frames:
+                memory.append(page)
+            else:
+                memory.pop(0)
+                memory.append(page)
+
+    return hits, misses
+
+
+def lru(reference_string, frames):
+    memory = []
+    hits = 0
+    misses = 0
+
+    for page in reference_string:
+        if page in memory:
+            hits += 1
+
+            # Move recently used page to the end
+            memory.remove(page)
+            memory.append(page)
+
+        else:
+            misses += 1
+
+            if len(memory) < frames:
+                memory.append(page)
+            else:
+                # Remove least recently used page
+                memory.pop(0)
+                memory.append(page)
+
+    return hits, misses
+
+
+# Main program
+print("======================================")
+print("   PAGE REPLACEMENT SIMULATION")
+print("   FIFO and LRU Algorithms")
+print("======================================")
+
+# Get number of frames
+frames = int(input("Enter number of frames: "))
+
+if frames <= 0:
+    print("Number of frames must be greater than 0.")
+else:
+    # Get page reference string
+    data = input("Enter page reference string (space separated): ")
+
+    reference_string = list(map(int, data.split()))
+
+    print("\nReference String:")
+    print(reference_string)
+
+    print("\nNumber of Frames:", frames)
+
+    # FIFO
+    fifo_hits, fifo_misses = fifo(reference_string, frames)
+
+    # LRU
+    lru_hits, lru_misses = lru(reference_string, frames)
+
+    total_pages = len(reference_string)
+
+    # Calculate ratios
+    fifo_hit_ratio = fifo_hits / total_pages
+    fifo_miss_ratio = fifo_misses / total_pages
+
+    lru_hit_ratio = lru_hits / total_pages
+    lru_miss_ratio = lru_misses / total_pages
+
+    # Display FIFO results
+    print("\n---------- FIFO ----------")
+    print("Hits       :", fifo_hits)
+    print("Misses     :", fifo_misses)
+    print("Hit Ratio  :", round(fifo_hit_ratio, 2))
+    print("Miss Ratio :", round(fifo_miss_ratio, 2))
+
+    # Display LRU results
+    print("\n---------- LRU ----------")
+    print("Hits       :", lru_hits)
+    print("Misses     :", lru_misses)
+    print("Hit Ratio  :", round(lru_hit_ratio, 2))
+    print("Miss Ratio :", round(lru_miss_ratio, 2))
