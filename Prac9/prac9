@@ -5,11 +5,124 @@
 print("S109 Neetu Salunkhe")
 
 def fifo(reference_string, frames):
+    memor#9.
+
+# Memory Management - FIFO and LRU Page Replacement
+# Runs directly in Python IDLE
+print("S109 Neetu Salunkhe")
+
+def fifo_page_replacement(pages, frames):
     memory = []
     hits = 0
     misses = 0
 
-    for page in reference_string:
+    print("\n===== FIFO PAGE REPLACEMENT =====")
+
+    for page in pages:
+
+        if page in memory:
+            hits += 1
+            status = "Hit"
+
+        else:
+            misses += 1
+            status = "Miss"
+
+            if len(memory) < frames:
+                memory.append(page)
+            else:
+                memory.pop(0)
+                memory.append(page)
+
+        print("Page", page, "->", memory, ":", status)
+
+    return hits, misses
+
+
+def lru_page_replacement(pages, frames):
+    memory = []
+    hits = 0
+    misses = 0
+
+    print("\n===== LRU PAGE REPLACEMENT =====")
+
+    for page in pages:
+
+        if page in memory:
+            hits += 1
+            status = "Hit"
+
+            # Move the recently used page to the end
+            memory.remove(page)
+            memory.append(page)
+
+        else:
+            misses += 1
+            status = "Miss"
+
+            if len(memory) < frames:
+                memory.append(page)
+            else:
+                # Remove least recently used page
+                memory.pop(0)
+                memory.append(page)
+
+        print("Page", page, "->", memory, ":", status)
+
+    return hits, misses
+
+print("==========================================")
+print("       MEMORY MANAGEMENT SIMULATION")
+print("==========================================")
+
+# Input page reference string
+reference = input("Enter page reference string (space separated): ")
+
+# Convert input into integers
+pages = list(map(int, reference.split()))
+
+# Input number of frames
+frames = int(input("Enter number of frames: "))
+
+# Check frames
+if frames <= 0:
+    print("Number of frames must be greater than 0.")
+
+else:
+
+    # FIFO
+    fifo_hits, fifo_misses = fifo_page_replacement(pages, frames)
+
+    # LRU
+    lru_hits, lru_misses = lru_page_replacement(pages, frames)
+
+    # Total number of page references
+    total = len(pages)
+
+    # Calculate ratios
+    fifo_hit_ratio = fifo_hits / total
+    fifo_miss_ratio = fifo_misses / total
+
+    lru_hit_ratio = lru_hits / total
+    lru_miss_ratio = lru_misses / total
+
+
+    print("\n==========================================")
+    print("              FINAL RESULTS")
+    print("==========================================")
+
+    print("\nFIFO:")
+    print("Hits       =", fifo_hits)
+    print("Misses     =", fifo_misses)
+    print("Hit Ratio  =", round(fifo_hit_ratio, 2))
+    print("Miss Ratio =", round(fifo_miss_ratio, 2))
+
+    print("\nLRU:")
+    print("Hits       =", lru_hits)
+    print("Misses     =", lru_misses)
+    print("Hit Ratio  =", round(lru_hit_ratio, 2))
+    print("Miss Ratio =", round(lru_miss_ratio, 2))
+
         if page in memory:
             hits += 1
         else:
